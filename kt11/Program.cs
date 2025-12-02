@@ -2,47 +2,154 @@
 
 namespace kt11
 {
-    class Program
+    public class LinkedList<T> where T : class
     {
-        public static void Swap<T>(ref T x, ref T y) where T : struct
+        private class Node
         {
-            T temp = x;
-            x = y;
-            y = temp;
+            public T Data { get; set; }
+            public Node Next { get; set; }
+
+            public Node(T data)
+            {
+                Data = data;
+                Next = null;
+            }
         }
 
+        private Node head;
+
+        public void Add(T item)
+        {
+            Node newNode = new Node(item);
+
+            if (head == null)
+            {
+                head = newNode;
+            }
+            else
+            {
+                Node current = head;
+                while (current.Next != null)
+                {
+                    current = current.Next;
+                }
+                current.Next = newNode;
+            }
+        }
+
+        public void Remove(T item)
+        {
+            if (head == null) return;
+
+            if (head.Data == item)
+            {
+                head = head.Next;
+                return;
+            }
+
+            Node current = head;
+            while (current.Next != null)
+            {
+                if (current.Next.Data == item)
+                {
+                    current.Next = current.Next.Next;
+                    return;
+                }
+                current = current.Next;
+            }
+        }
+
+        public bool Contains(T item)
+        {
+            Node current = head;
+            while (current != null)
+            {
+                if (current.Data == item)
+                {
+                    return true;
+                }
+                current = current.Next;
+            }
+            return false;
+        }
+
+        public void Print()
+        {
+            Node current = head;
+            while (current != null)
+            {
+                if (current.Data is Person person)
+                {
+                    Console.Write(person.Name + " - ");
+                }
+                else if (current.Data is Book book)
+                {
+                    Console.Write(book.Title + " - ");
+                }
+                else
+                {
+                    Console.Write(current.Data + " - ");
+                }
+                current = current.Next;
+            }
+        }
+    }
+
+    public class Person
+    {
+        public string Name { get; set; }
+
+        public Person(string name)
+        {
+            Name = name;
+        }
+    }
+
+    public class Book
+    {
+        public string Title { get; set; }
+
+        public Book(string title)
+        {
+            Title = title;
+        }
+    }
+
+    class Program
+    {
         static void Main()
         {
-            int a = 10;
-            int b = 20;
-            Console.WriteLine("before swap - int:");
-            Console.WriteLine($"a = {a}, b = {b}");
+            LinkedList<string> stringList = new LinkedList<string>();
+            stringList.Add("Hello");
+            stringList.Add("World");
+            stringList.Add("C#");
 
-            Swap(ref a, ref b);
-            Console.WriteLine("after swap - int:");
-            Console.WriteLine($"a = {a}, b = {b}");
+            Console.WriteLine("string list ");
+            stringList.Print();
+            Console.WriteLine("contains 'World' " + stringList.Contains("World"));
 
-            Console.WriteLine();
-
-            double x = 3.14;
-            double y = 2.71;
-            Console.WriteLine("before swap - double:");
-            Console.WriteLine($"x = {x}, y = {y}");
-
-            Swap(ref x, ref y);
-            Console.WriteLine("after swap - double:");
-            Console.WriteLine($"x = {x}, y = {y}");
+            stringList.Remove("world");
+            Console.WriteLine("after removing 'World':");
+            stringList.Print();
 
             Console.WriteLine();
 
-            bool flag1 = true;
-            bool flag2 = false;
-            Console.WriteLine("before swap - bool:");
-            Console.WriteLine($"flag1 = {flag1}, flag2 = {flag2}");
+            LinkedList<Person> personList = new LinkedList<Person>();
+            personList.Add(new Person("Max"));
+            personList.Add(new Person("Maxi"));
+            personList.Add(new Person("Maxo"));
 
-            Swap(ref flag1, ref flag2);
-            Console.WriteLine("after swap - bool:");
-            Console.WriteLine($"flag1 = {flag1}, flag2 = {flag2}");
+            Console.WriteLine("person list ");
+            personList.Print();
+
+            Console.WriteLine();
+
+            LinkedList<Book> bookList = new LinkedList<Book>();
+            bookList.Add(new Book("Book1"));
+            bookList.Add(new Book("Book2"));
+
+            Console.WriteLine("book list ");
+            bookList.Print();
 
             Console.ReadLine();
         }
