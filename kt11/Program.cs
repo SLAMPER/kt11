@@ -2,154 +2,79 @@
 
 namespace kt11
 {
-    public class LinkedList<T> where T : class
+    public interface IPrintable<T>
     {
-        private class Node
+        void Print();
+    }
+
+    public class Student : IPrintable<Student>
+    {
+        public string Name { get; set; }
+        public int Age { get; set; }
+        public string Grade { get; set; }
+
+        public Student(string name, int age, string grade)
         {
-            public T Data { get; set; }
-            public Node Next { get; set; }
-
-            public Node(T data)
-            {
-                Data = data;
-                Next = null;
-            }
-        }
-
-        private Node head;
-
-        public void Add(T item)
-        {
-            Node newNode = new Node(item);
-
-            if (head == null)
-            {
-                head = newNode;
-            }
-            else
-            {
-                Node current = head;
-                while (current.Next != null)
-                {
-                    current = current.Next;
-                }
-                current.Next = newNode;
-            }
-        }
-
-        public void Remove(T item)
-        {
-            if (head == null) return;
-
-            if (head.Data == item)
-            {
-                head = head.Next;
-                return;
-            }
-
-            Node current = head;
-            while (current.Next != null)
-            {
-                if (current.Next.Data == item)
-                {
-                    current.Next = current.Next.Next;
-                    return;
-                }
-                current = current.Next;
-            }
-        }
-
-        public bool Contains(T item)
-        {
-            Node current = head;
-            while (current != null)
-            {
-                if (current.Data == item)
-                {
-                    return true;
-                }
-                current = current.Next;
-            }
-            return false;
+            Name = name;
+            Age = age;
+            Grade = grade;
         }
 
         public void Print()
         {
-            Node current = head;
-            while (current != null)
-            {
-                if (current.Data is Person person)
-                {
-                    Console.Write(person.Name + " - ");
-                }
-                else if (current.Data is Book book)
-                {
-                    Console.Write(book.Title + " - ");
-                }
-                else
-                {
-                    Console.Write(current.Data + " - ");
-                }
-                current = current.Next;
-            }
+            Console.WriteLine($"student Name={Name}, Age={Age}, Grade={Grade}");
         }
     }
 
-    public class Person
+    public struct Vector : IPrintable<Vector>
     {
-        public string Name { get; set; }
+        public double X { get; set; }
+        public double Y { get; set; }
+        public double Z { get; set; }
 
-        public Person(string name)
+        public Vector(double x, double y, double z)
         {
-            Name = name;
+            X = x;
+            Y = y;
+            Z = z;
         }
-    }
 
-    public class Book
-    {
-        public string Title { get; set; }
-
-        public Book(string title)
+        public void Print()
         {
-            Title = title;
+            Console.WriteLine($"Vector: X={X}, Y={Y}, Z={Z}");
         }
     }
 
     class Program
     {
+        public static void PrintItem<T>(T item) where T : IPrintable<T>
+        {
+            item.Print();
+        }
+
         static void Main()
         {
-            LinkedList<string> stringList = new LinkedList<string>();
-            stringList.Add("Hello");
-            stringList.Add("World");
-            stringList.Add("C#");
+            Student student1 = new Student("Max", 20, "A");
+            Student student2 = new Student("Maxi", 22, "B");
 
-            Console.WriteLine("string list ");
-            stringList.Print();
-            Console.WriteLine("contains 'World' " + stringList.Contains("World"));
-
-            stringList.Remove("world");
-            Console.WriteLine("after removing 'World':");
-            stringList.Print();
+            Console.WriteLine("students ");
+            PrintItem(student1);
+            PrintItem(student2);
 
             Console.WriteLine();
 
-            LinkedList<Person> personList = new LinkedList<Person>();
-            personList.Add(new Person("Max"));
-            personList.Add(new Person("Maxi"));
-            personList.Add(new Person("Maxo"));
+            Vector vector1 = new Vector(1.0, 2.0, 3.0);
+            Vector vector2 = new Vector(4.5, 6.7, 8.9);
 
-            Console.WriteLine("person list ");
-            personList.Print();
+            Console.WriteLine("vectors ");
+            PrintItem(vector1);
+            PrintItem(vector2);
 
             Console.WriteLine();
 
-            LinkedList<Book> bookList = new LinkedList<Book>();
-            bookList.Add(new Book("Book1"));
-            bookList.Add(new Book("Book2"));
-
-            Console.WriteLine("book list ");
-            bookList.Print();
+            Console.WriteLine("calls ");
+            student1.Print();
+            vector1.Print();
 
             Console.ReadLine();
         }
